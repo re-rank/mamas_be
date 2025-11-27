@@ -19,6 +19,11 @@ langchain-openai>=0.3.0,<0.4.0
 # Data processing
 numpy>=2.0.0,<3.0.0
 
+# PDF processing
+pymupdf>=1.24.0
+pytesseract>=0.3.10
+Pillow>=10.0.0
+
 # Utils
 python-dotenv>=1.0.0
 pydantic>=2.6.3,<3.0.0

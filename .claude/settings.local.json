@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:docs.voyageai.com)",
+      "Bash(winget install:*)",
+      "Bash(where:*)",
+      "Bash(test:*)",
+      "Bash(\"$TEMP/tesseract-setup.exe\" /S /D=\"C:\\Program Files\\Tesseract-OCR\")",
+      "Bash(cmd.exe /c \"start /wait %TEMP%\\tesseract-setup.exe /S\")",
+      "Bash(\"/c/Program Files/Tesseract-OCR/tesseract.exe\" --version)",
+      "Bash(\"/c/Program Files/Tesseract-OCR/tesseract.exe\" --list-langs)",
+      "Bash(pip install:*)",
+      "Bash(python:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
