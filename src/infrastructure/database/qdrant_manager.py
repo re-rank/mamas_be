@@ -128,23 +128,24 @@ class QdrantManager:
         """벡터 검색 수행"""
         name = collection_name or self.collection_name
         threshold = score_threshold or config.SEARCH_SCORE_THRESHOLD
-        
+
         try:
-            results = self.client.search(
+            # qdrant-client 1.11+ uses query_points instead of search
+            results = self.client.query_points(
                 collection_name=name,
-                query_vector=query_vector,
+                query=query_vector,
                 limit=limit,
                 score_threshold=threshold,
                 query_filter=filter_conditions
             )
-            
+
             return [
                 {
                     "id": str(hit.id),
                     "score": hit.score,
                     "payload": hit.payload or {}
                 }
-                for hit in results
+                for hit in results.points
             ]
         except Exception as e:
             logger.error(f"검색 실패: {e}")
