@@ -15,7 +15,9 @@
       "Bash(mkdir:*)",
       "Bash(export PYTHONIOENCODING=utf-8)",
       "Bash(export PORT=8080)",
-      "Bash(timeout 5 python -m uvicorn:*)"
+      "Bash(timeout 5 python -m uvicorn:*)",
+      "Bash(set PORT=8080)",
+      "Bash(timeout 5 python:*)"
     ],
     "deny": [],
     "ask": []
