@@ -11,7 +11,9 @@
       "Bash(\"/c/Program Files/Tesseract-OCR/tesseract.exe\" --version)",
       "Bash(\"/c/Program Files/Tesseract-OCR/tesseract.exe\" --list-langs)",
       "Bash(pip install:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(mkdir:*)",
+      "Bash(export PYTHONIOENCODING=utf-8)"
     ],
     "deny": [],
     "ask": []
