@@ -64,7 +64,7 @@ CACHE_TTL_SECONDS = int(os.getenv("CACHE_TTL_SECONDS", "300"))
 CACHE_MAX_SIZE = int(os.getenv("CACHE_MAX_SIZE", "100"))
 
 # 컬렉션 설정
-COLLECTION_NAME = os.getenv("COLLECTION_NAME", "mamas_documents")
+COLLECTION_NAME = os.getenv("COLLECTION_NAME", "labor_consultant_docs")
 
 # 로깅 설정
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO" if IS_PRODUCTION else "DEBUG")
