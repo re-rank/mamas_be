@@ -69,13 +69,21 @@ def create_app() -> FastAPI:
         lifespan=lifespan
     )
     
-    # CORS 설정
+    # CORS 설정 - Vercel 도메인 명시적 허용
+    cors_origins = list(config.CORS_ORIGINS)
+    vercel_origin = "https://rag-murex-seven.vercel.app"
+    if vercel_origin not in cors_origins:
+        cors_origins.append(vercel_origin)
+
+    logger.info(f"🌐 CORS 허용 origins: {cors_origins}")
+
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=config.CORS_ORIGINS,
+        allow_origins=cors_origins,
         allow_credentials=True,
-        allow_methods=["*"],
+        allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         allow_headers=["*"],
+        expose_headers=["*"],
     )
     
     # 전역 예외 처리
