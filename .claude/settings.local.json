@@ -18,7 +18,8 @@
       "Bash(timeout 5 python -m uvicorn:*)",
       "Bash(set PORT=8080)",
       "Bash(timeout 5 python:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git push)"
     ],
     "deny": [],
     "ask": []
