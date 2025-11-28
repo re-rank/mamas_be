@@ -11,15 +11,19 @@ logger = logging.getLogger(__name__)
 
 
 # 기본 시스템 프롬프트
-DEFAULT_SYSTEM_PROMPT = """당신은 친절하고 전문적인 AI 어시스턴트입니다.
-사용자의 질문에 대해 제공된 컨텍스트 정보를 기반으로 정확하고 유용한 답변을 제공합니다.
+DEFAULT_SYSTEM_PROMPT = """You are a friendly and professional AI assistant.
+You provide accurate and useful answers based on the provided context information.
 
-답변 시 다음 가이드라인을 따르세요:
-1. 컨텍스트에 있는 정보를 우선적으로 활용하세요
-2. 컨텍스트에 없는 정보는 "제공된 정보에서 확인할 수 없습니다"라고 명시하세요
-3. 명확하고 구조화된 답변을 제공하세요
-4. 필요한 경우 관련 출처를 언급하세요
-5. 한국어로 답변하세요
+Follow these guidelines when answering:
+1. Prioritize information from the provided context
+2. If information is not in the context, clearly state "This information is not available in the provided context"
+3. Provide clear and structured answers
+4. Mention relevant sources when necessary
+5. **IMPORTANT: Always respond in the same language as the user's question**
+   - If the user asks in Korean, respond in Korean
+   - If the user asks in English, respond in English
+   - If the user asks in Japanese, respond in Japanese
+   - Match the language of any other language the user uses
 """
 
 
@@ -53,21 +57,21 @@ class LLMHandler:
     def _build_context(self, search_results: list[dict[str, Any]]) -> str:
         """검색 결과로부터 컨텍스트 구성"""
         if not search_results:
-            return "관련 정보를 찾을 수 없습니다."
-        
+            return "No relevant information found."
+
         context_parts = []
         for i, result in enumerate(search_results, 1):
             content = result.get("content", "")
             title = result.get("title", "")
             score = result.get("score", 0)
-            
+
             if content:
-                part = f"[문서 {i}]"
+                part = f"[Document {i}]"
                 if title:
                     part += f" ({title})"
-                part += f" [관련도: {score:.2f}]\n{content}"
+                part += f" [Relevance: {score:.2f}]\n{content}"
                 context_parts.append(part)
-        
+
         return "\n\n---\n\n".join(context_parts)
     
     def _build_messages(
@@ -90,15 +94,15 @@ class LLMHandler:
                 })
         
         # 사용자 질문과 컨텍스트
-        user_message = f"""다음 컨텍스트 정보를 참고하여 질문에 답변해주세요.
+        user_message = f"""Please answer the question based on the following context information.
 
-### 컨텍스트 정보:
+### Context:
 {context}
 
-### 질문:
+### Question:
 {question}
 
-### 답변:"""
+### Answer:"""
         
         messages.append({"role": "user", "content": user_message})
         
@@ -149,7 +153,7 @@ class LLMHandler:
         except Exception as e:
             logger.error(f"❌ 답변 생성 실패: {e}")
             return {
-                "answer": "죄송합니다. 답변을 생성하는 중 오류가 발생했습니다.",
+                "answer": "Sorry, an error occurred while generating the answer.",
                 "error": str(e),
                 "success": False
             }
@@ -180,7 +184,7 @@ class LLMHandler:
                     
         except Exception as e:
             logger.error(f"스트리밍 답변 실패: {e}")
-            yield f"오류가 발생했습니다: {str(e)}"
+            yield f"An error occurred: {str(e)}"
     
     def chat(
         self,
@@ -213,7 +217,7 @@ class LLMHandler:
             
         except Exception as e:
             logger.error(f"채팅 실패: {e}")
-            return f"오류가 발생했습니다: {str(e)}"
+            return f"An error occurred: {str(e)}"
     
     def update_system_prompt(self, prompt: str):
         """시스템 프롬프트 업데이트"""
