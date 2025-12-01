@@ -44,7 +44,7 @@ LLM_MAX_TOKENS = int(os.getenv("LLM_MAX_TOKENS", "2000"))
 # 검색 설정
 DEFAULT_SEARCH_K = int(os.getenv("DEFAULT_SEARCH_K", "5"))
 MAX_SEARCH_K = int(os.getenv("MAX_SEARCH_K", "20"))
-SEARCH_SCORE_THRESHOLD = float(os.getenv("SEARCH_SCORE_THRESHOLD", "0.5"))
+SEARCH_SCORE_THRESHOLD = float(os.getenv("SEARCH_SCORE_THRESHOLD", "0.3"))
 
 # 서버 설정
 HOST = os.getenv("HOST", "0.0.0.0")
@@ -59,7 +59,7 @@ CACHE_TTL_SECONDS = int(os.getenv("CACHE_TTL_SECONDS", "300"))
 CACHE_MAX_SIZE = int(os.getenv("CACHE_MAX_SIZE", "100"))
 
 # 컬렉션 설정
-COLLECTION_NAME = os.getenv("COLLECTION_NAME", "mamas_documents")
+COLLECTION_NAME = os.getenv("COLLECTION_NAME", "labor_consultant_docs")
 
 # 로깅 설정
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO" if IS_PRODUCTION else "DEBUG")

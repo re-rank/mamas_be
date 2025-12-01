@@ -103,7 +103,7 @@ class QdrantManager:
             info = self.client.get_collection(name)
             result = {
                 "name": name,
-                "vectors_count": info.vectors_count,
+                "vectors_count": info.vectors_count if hasattr(info, 'vectors_count') else info.points_count,
                 "points_count": info.points_count,
                 "status": info.status.value if info.status else "unknown"
             }
@@ -130,13 +130,13 @@ class QdrantManager:
         threshold = score_threshold or config.SEARCH_SCORE_THRESHOLD
         
         try:
-            results = self.client.search(
+            results = self.client.query_points(
                 collection_name=name,
-                query_vector=query_vector,
+                query=query_vector,
                 limit=limit,
                 score_threshold=threshold,
                 query_filter=filter_conditions
-            )
+            ).points
             
             return [
                 {
