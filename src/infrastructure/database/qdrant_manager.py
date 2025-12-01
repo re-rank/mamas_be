@@ -128,8 +128,9 @@ class QdrantManager:
         """벡터 검색 수행"""
         name = collection_name or self.collection_name
         threshold = score_threshold or config.SEARCH_SCORE_THRESHOLD
-        
+
         try:
+            # qdrant-client 1.11+ uses query_points instead of search
             results = self.client.query_points(
                 collection_name=name,
                 query=query_vector,

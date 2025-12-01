@@ -1,0 +1,16 @@
+name: mamas-be
+app:
+  type: python
+  version: "3.13"
+
+build:
+  command: pip install -r requirements.txt
+
+run:
+  command: uvicorn src.main:app --host 0.0.0.0 --port 8000
+
+port: 8000
+
+env:
+  - name: ENVIRONMENT
+    value: production

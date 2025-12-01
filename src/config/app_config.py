@@ -51,7 +51,12 @@ HOST = os.getenv("HOST", "0.0.0.0")
 PORT = int(os.getenv("PORT", "8000"))
 
 # CORS 설정
-CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
+_default_cors = ",".join([
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://rag-murex-seven.vercel.app",
+])
+CORS_ORIGINS = [origin.strip() for origin in os.getenv("CORS_ORIGINS", _default_cors).split(",")]
 
 # 캐시 설정
 ENABLE_SEARCH_CACHE = os.getenv("ENABLE_SEARCH_CACHE", "true").lower() == "true"
