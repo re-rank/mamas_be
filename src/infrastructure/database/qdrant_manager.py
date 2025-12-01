@@ -131,13 +131,21 @@ class QdrantManager:
 
         try:
             # qdrant-client 1.11+ uses query_points instead of search
-            results = self.client.query_points(
+            logger.debug(f"🔍 Qdrant 검색 - 컬렉션: {name}, limit: {limit}, threshold: {threshold}")
+            
+            response = self.client.query_points(
                 collection_name=name,
                 query=query_vector,
                 limit=limit,
                 score_threshold=threshold,
                 query_filter=filter_conditions
-            ).points
+            )
+            
+            results = response.points
+            logger.debug(f"📊 Qdrant 응답 - 원본 결과 수: {len(results)}")
+            
+            if results:
+                logger.debug(f"📈 최고 점수: {results[0].score:.4f}, 최저 점수: {results[-1].score:.4f}")
             
             return [
                 {
@@ -149,6 +157,8 @@ class QdrantManager:
             ]
         except Exception as e:
             logger.error(f"검색 실패: {e}")
+            import traceback
+            logger.error(traceback.format_exc())
             return []
     
     def search_with_payload_filter(

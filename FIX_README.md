@@ -12,16 +12,37 @@
    - 컬렉션 정보 조회 버그 수정
 3. ✅ `env.example`: 예제 설정 업데이트
 
-## 필수 조치사항
+## 필수 조치사항 ⚠️
 
-**`.env` 파일을 다음과 같이 수정하세요:**
+### 방법 1: 자동 스크립트 실행 (추천)
+
+**Windows:**
+```cmd
+update_env.bat
+```
+
+**Linux/Mac:**
+```bash
+chmod +x update_env.sh
+./update_env.sh
+```
+
+### 방법 2: 수동 설정
+
+**`.env` 파일을 직접 열어서 다음 두 줄을 수정하세요:**
 
 ```env
-# 컬렉션 이름 변경
+# 기존값 수정 또는 새로 추가
 COLLECTION_NAME=labor_consultant_docs
-
-# 검색 임계값 낮추기
 SEARCH_SCORE_THRESHOLD=0.3
+```
+
+**`.env` 파일이 없다면:**
+```bash
+# env.example을 복사
+cp env.example .env
+
+# 그 후 위의 두 줄을 수정
 ```
 
 ## 서버 재시작

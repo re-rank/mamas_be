@@ -166,14 +166,10 @@ async def chat(
                 _stream_chat_response(request, search_service, llm_handler),
                 media_type="text/event-stream"
             )
-        
-        # 검색 수행
-        search_results = search_service.search(
-            query=request.message,
-            top_k=request.top_k,
-            collection_name=request.collection_name
-        )
-        
+
+        # 검색 수행 (멀티 컬렉션 검색)
+        search_results = _perform_search(request, search_service)
+
         # 대화 기록 변환
         history = [
             {"role": msg.role, "content": msg.content}
@@ -212,6 +208,42 @@ async def chat(
         raise HTTPException(status_code=500, detail=str(e))
 
 
+def _perform_search(request: ChatRequest, search_service: SearchService) -> list[dict]:
+    """멀티 컬렉션 검색 수행"""
+    if request.collection_name:
+        # 특정 컬렉션 지정 시 해당 컬렉션만 검색
+        return search_service.search(
+            query=request.message,
+            top_k=request.top_k,
+            collection_name=request.collection_name
+        )
+
+    # 기본: 모든 설정된 컬렉션에서 검색
+    multi_results = search_service.multi_collection_search(
+        query=request.message,
+        collection_names=config.SEARCH_COLLECTIONS,
+        top_k=request.top_k
+    )
+
+    # 모든 컬렉션 결과를 점수순으로 정렬하여 병합
+    all_results = []
+    for collection_name, results in multi_results.items():
+        for r in results:
+            r["collection"] = collection_name
+        all_results.extend(results)
+
+    # 점수순 정렬 후 top_k개 선택
+    all_results.sort(key=lambda x: x.get("score", 0), reverse=True)
+    search_results = all_results[:request.top_k]
+
+    # rank 재할당
+    for i, r in enumerate(search_results):
+        r["rank"] = i + 1
+
+    logger.info(f"📊 멀티 컬렉션 검색 완료: {len(search_results)}개 결과")
+    return search_results
+
+
 async def _stream_chat_response(
     request: ChatRequest,
     search_service: SearchService,
@@ -219,13 +251,9 @@ async def _stream_chat_response(
 ):
     """스트리밍 응답 생성기"""
     try:
-        # 검색 수행
-        search_results = search_service.search(
-            query=request.message,
-            top_k=request.top_k,
-            collection_name=request.collection_name
-        )
-        
+        # 검색 수행 (멀티 컬렉션 검색)
+        search_results = _perform_search(request, search_service)
+
         history = [
             {"role": msg.role, "content": msg.content}
             for msg in request.conversation_history
