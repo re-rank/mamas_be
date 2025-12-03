@@ -56,6 +56,7 @@ _default_cors = ",".join([
     "http://127.0.0.1:3000",
     "https://rag-murex-seven.vercel.app",
     "https://mamasgroupcoltd.com",
+    "https://www.mamasgroupcoltd.com",
 ])
 CORS_ORIGINS = [origin.strip() for origin in os.getenv("CORS_ORIGINS", _default_cors).split(",")]
 
